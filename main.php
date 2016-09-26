@@ -24,15 +24,12 @@ $ls[] = [5,0,4,2,0,6,0,7,0];
 $ls[] = [9,1,0,0,7,0,0,0,0];
 $ls[] = [0,3,0,0,0,8,0,1,0];
 
-$lines = [];
-foreach($ls as $l){
-  $lines[] = new Line($l);
-}
 
-$box = new Box($lines);
+$box = new Box($ls);
 
 $box->display();
 
+$box->getCol(8)->display();
 class Cell {
 
     private $num;
@@ -60,41 +57,106 @@ class Line {
 
     public $cells = [];
 
-    public function __construct(array $nums)
+    public function __construct(array $cells)
     {
-        foreach($nums as $num){
-            $preset = $num == 0 ? false : true;
-            $this->cells[] = new Cell($num, $preset);
+        $this->cells = $cells;
+    }
+
+    public function display()
+    {
+        foreach($this->cells as $cell){
+            $cell->display();
+        }
+        print(PHP_EOL);
+    }
+}
+
+class Col {
+
+    public $cells = [];
+
+    public function __construct(array $cells)
+    {
+        $this->cells = $cells;
+    }
+
+    public function display()
+    {
+        foreach($this->cells as $cell){
+            $cell->display();
+            print(PHP_EOL);
         }
     }
 }
 
 class Box {
 
+    private $cells = [];
     private $lines = [];
+    private $cols = [];
+    const BOX_SIZE = 9;
 
     public function __construct(array $lines)
     {
-        $this->lines = $lines;
+        foreach($lines as $line){
+            foreach($line as $num){
+                $preset = $num != 0;
+                $this->cells[] = new Cell($num, $preset);
+            }
+        }
+        $this->setLines();
+        $this->setCols();
+    }
+
+    private function setLines()
+    {
+        $lines = [];
+        foreach($this->cells as $i => $cell){
+            $lines[] = $cell;
+            if($i % self::BOX_SIZE == 8){
+                $this->lines[] = new Line($lines);
+                $lines = [];
+            }
+        }
+    }
+
+    private function setCols()
+    {
+        for($i=0; $i< self::BOX_SIZE; $i++){
+            $cols = [];
+            for($j=0; $j< self::BOX_SIZE; $j++){
+                $index = $i + $j * self::BOX_SIZE;
+                $cols[] = $this->cells[$index];
+            }
+            $this->cols[] = new Col($cols);
+        }
+    }
+
+    public function getLine(int $index)
+    {
+        return $this->lines[$index];
+    }
+
+    public function getCol(int $index)
+    {
+        return $this->cols[$index];
     }
 
     public function display()
     {
         $i=0;
-        foreach($this->lines as $line){
-            foreach($line->cells as $cell){
-                $cell->display();
-                if($i%3 == 2){
-                    echo '|';
-                }
-                if($i%9 == 8){
-                    echo PHP_EOL;
-                }
-                if($i%27 == 26){
-                    echo "------------\n";
-                }
-                $i++;
+        foreach($this->cells as $cell){
+            $cell->display();
+            if($i%3 == 2){
+                echo '|';
             }
+            if($i%9 == 8){
+                echo PHP_EOL;
+            }
+            if($i%27 == 26){
+                echo "------------\n";
+            }
+            $i++;
         }
     }
 
