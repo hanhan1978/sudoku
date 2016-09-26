@@ -1,0 +1,5 @@
+{
+    "require": {
+        "kevinlebrun/colors.php": "^1.0"
+    }
+}

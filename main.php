@@ -1,4 +1,6 @@
 <?php
+require dirname(__FILE__).'/vendor/autoload.php';
+use Colors\Color;
 /**
  2 |  1|95 
   9|8  |   
@@ -44,7 +46,12 @@ class Cell {
 
     public function display()
     {
-        echo $this->num;
+        if($this->preset){
+            $c = new Color();
+            print $c($this->num)->red;
+        }else{
+            print $this->num;
+        }
     }
 
 }
@@ -90,4 +97,5 @@ class Box {
             }
         }
     }
+
 }
