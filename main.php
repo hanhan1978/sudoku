@@ -25,11 +25,10 @@ $ls[] = [9,1,0,0,7,0,0,0,0];
 $ls[] = [0,3,0,0,0,8,0,1,0];
 
 
-$box = new Box($ls);
+$box = new Container($ls);
 
 $box->display();
 
-$box->getCol(8)->display();
 class Cell {
 
     private $num;
@@ -90,10 +89,33 @@ class Col {
 }
 
 class Box {
+    public $cells = [];
+
+    public function __construct(array $cells)
+    {
+        $this->cells = $cells;
+    }
+
+    public function display()
+    {
+        $i=0;
+        foreach($this->cells as $cell){
+            $cell->display();
+            if($i%3 == 2){
+                print(PHP_EOL);
+            }
+            $i++;
+        }
+    }
+}
+
+class Container {
 
     private $cells = [];
     private $lines = [];
+    private $boxes = [];
     private $cols = [];
+
     const BOX_SIZE = 9;
 
     public function __construct(array $lines)
@@ -106,7 +128,22 @@ class Box {
         }
         $this->setLines();
         $this->setCols();
+        $this->setBoxes();
     }
+
+    private function setBoxes()
+    {
+        for($i=0; $i<self::BOX_SIZE; $i++){
+            $boxes = [];
+            $index = floor($i/3) * 27 + ($i%3)*3;
+            for($j=0; $j<self::BOX_SIZE; $j++){
+                $id = $index + floor($j/3) * 9 + ($j%3);
+                $boxes[] = $this->cells[$id];
+            }
+            $this->boxes[] = new Box($boxes);
+        }
+    }
+
 
     private function setLines()
     {
@@ -130,6 +167,10 @@ class Box {
             }
             $this->cols[] = new Col($cols);
         }
+    }
+    public function getBox(int $index)
+    {
+        return $this->boxes[$index];
     }
 
     public function getLine(int $index)
