@@ -14,52 +14,89 @@ use Colors\Color;
 91 | 7 |   
  3 |  8| 1 
 **/
-$ls[] = [0,2,0,0,0,1,9,5,0];
-$ls[] = [0,0,9,8,0,0,0,0,0];
-$ls[] = [0,0,0,0,0,4,0,6,3];
-$ls[] = [6,0,0,0,8,2,0,0,1];
-$ls[] = [2,9,0,5,0,7,8,3,4];
-$ls[] = [0,7,3,1,4,0,5,2,6];
-$ls[] = [5,0,4,2,0,6,0,7,0];
-$ls[] = [9,1,0,0,7,0,0,0,0];
-$ls[] = [0,3,0,0,0,8,0,1,0];
+$ls[] = [3,0,0,0,0,0,0,1,4];
+$ls[] = [0,9,8,0,5,0,3,6,2];
+$ls[] = [0,0,1,0,0,3,9,0,7];
+$ls[] = [0,0,0,0,6,5,0,0,0];
+$ls[] = [0,0,4,0,9,7,0,0,8];
+$ls[] = [0,7,0,8,0,1,2,0,0];
+$ls[] = [5,4,0,0,1,6,0,2,0];
+$ls[] = [6,3,2,5,8,9,7,0,0];
+$ls[] = [1,0,0,4,0,2,0,0,0];
 
 
-$box = new Container($ls);
+$con = new Container($ls);
 
-$box->display();
+$con->display();
 
-class Cell {
+$tat = new Tactics($con);
+$tat->solve();
+$tat->solve();
+$tat->solve();
+$tat->solve();
+$tat->solve();
 
-    private $num;
-    private $preset;
+echo PHP_EOL;
+$con->display();
 
-    public function __construct(int $num, bool $preset)
-    {
-        $this->num = $num;
-        $this->preset = $preset;
+
+class Tactics {
+    private $con;
+    public function __construct(Container $con){
+        $this->con = $con;
     }
 
-    public function display()
+    public function solve()
     {
-        if($this->preset){
-            $c = new Color();
-            print $c($this->num)->red;
-        }else{
-            print $this->num;
+        for($i=0;$i<(9*9);$i++){
+            $cell = $this->con->getCell($i);
+            if($cell->num != 0){
+                continue;
+            }
+            $box = $this->con->getBox($i)->getResidue();
+            $col = $this->con->getCol($i)->getPresent();
+            $line = $this->con->getLine($i)->getPresent();
+            
+            $cand = array_diff($box, $col, $line);
+            if(is_array($cand) && count($cand) == 1){
+                $cell->num = array_shift($cand);
+            }
         }
     }
-
 }
-
-class Line {
-
+class Sudoku {
     public $cells = [];
 
     public function __construct(array $cells)
     {
         $this->cells = $cells;
     }
+
+    public function getPresent(){
+
+        $nums=[];
+        foreach($this->cells as $cell){
+            if($cell->num !=0){
+                $nums[]=$cell->num;
+            }
+        }
+        return $nums;
+    }
+    public function getResidue(){
+
+        $nums=[];
+        foreach($this->cells as $cell){
+            if($cell->num !=0){
+                $nums[]=$cell->num;
+            }
+        }
+        $base = [1,2,3,4,5,6,7,8,9];
+        return array_diff($base, $nums);
+    }
+}
+
+
+class Line extends Sudoku{
 
     public function display()
     {
@@ -70,14 +107,7 @@ class Line {
     }
 }
 
-class Col {
-
-    public $cells = [];
-
-    public function __construct(array $cells)
-    {
-        $this->cells = $cells;
-    }
+class Col extends Sudoku{
 
     public function display()
     {
@@ -88,14 +118,7 @@ class Col {
     }
 }
 
-class Box {
-    public $cells = [];
-
-    public function __construct(array $cells)
-    {
-        $this->cells = $cells;
-    }
-
+class Box extends Sudoku{
     public function display()
     {
         $i=0;
@@ -144,6 +167,9 @@ class Container {
         }
     }
 
+    public function getCell($id){
+        return $this->cells[$id];
+    }
 
     private function setLines()
     {
@@ -168,19 +194,22 @@ class Container {
             $this->cols[] = new Col($cols);
         }
     }
+
     public function getBox(int $index)
     {
-        return $this->boxes[$index];
+        $row = floor($index / 27);
+        $col = floor($index % 9 / 3);
+        return $this->boxes[($row *3 + $col)];
     }
 
     public function getLine(int $index)
     {
-        return $this->lines[$index];
+        return $this->lines[floor($index/9)];
     }
 
     public function getCol(int $index)
     {
-        return $this->cols[$index];
+        return $this->cols[$index%9];
     }
 
     public function display()
@@ -198,6 +227,32 @@ class Container {
                 echo "------------\n";
             }
             $i++;
+        }
+    }
+
+}
+class Cell {
+
+    public $num;
+    private $preset;
+
+    public function __construct(int $num, bool $preset)
+    {
+        $this->num = $num;
+        $this->preset = $preset;
+    }
+
+    public function display()
+    {
+        $c = new Color();
+        if($this->preset){
+            print $c($this->num)->red;
+        }else{
+            if($this->num == 0){
+                print $this->num;
+            }else{
+                print $c($this->num)->cyan;
+            }
         }
     }
 
