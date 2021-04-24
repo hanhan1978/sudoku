@@ -1,0 +1,14 @@
+{
+    "name": "hanhan/sudoku",
+    "authors": [
+        {
+            "name": "hanhan1978",
+            "email": "ryo.tomidokoro@gmail.com"
+        }
+    ],
+    "config": {
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^9.5"
+    }
+}
