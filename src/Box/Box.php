@@ -20,6 +20,11 @@ class Box
         $this->grid[$y][$x] = $number;
     }
 
+    public function dump(int $x, int $y)
+    {
+        var_dump($this->grid[$y][$x]);
+    }
+
 
     public function display()
     {
@@ -108,5 +113,24 @@ class Box
             $this->x++;
         }
         return $result;
+    }
+
+    public function solved() :bool
+    {
+        /**
+         * @var int $x
+         * @var int $y
+         * @var Number $number
+         */
+        while(list($x, $y, $number) = $this->next()) {
+            if(!$number->decided()){
+                $this->x = 0;
+                $this->y = 0;
+                return false;
+            }
+        }
+        $this->x = 0;
+        $this->y = 0;
+        return true;
     }
 }

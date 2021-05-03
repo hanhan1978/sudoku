@@ -36,7 +36,7 @@ class UniqueTest extends \PHPUnit\Framework\TestCase
         $box = ProblemParser::parse($problem);
         $box = $this->solver->solve($box);
         $box = $this->solver->solve($box);
-        $box = $this->solver->solve($box);
+        $this->assertTrue($box->solved());
         $this->assertTrue($box->valid());
     }
 
