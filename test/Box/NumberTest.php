@@ -12,7 +12,7 @@ class NumberTest extends \PHPUnit\Framework\TestCase
      */
     public function isOriginal_true()
     {
-        $number = new Number([1]);
+        $number = new Number([1], false, true);
         $this->assertTrue($number->isOriginal());
     }
 

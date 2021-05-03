@@ -25,6 +25,10 @@ class Box
         var_dump($this->grid[$y][$x]);
     }
 
+    public function getNumber(int $x, int $y) :Number{
+        return $this->grid[$y][$x];
+    }
+
 
     public function display()
     {

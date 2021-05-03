@@ -3,6 +3,8 @@ declare(strict_types=1);
 
 namespace Hanhan1978\Sudoku\Box;
 
+use JetBrains\PhpStorm\Pure;
+
 class Number
 {
     /**
@@ -59,6 +61,14 @@ class Number
     public function candidateCount() :int
     {
         return count($this->candidates);
+    }
+
+    /**
+     * @return int[]
+     */
+    public function getCandidates(): array
+    {
+        return $this->candidates;
     }
 
 }

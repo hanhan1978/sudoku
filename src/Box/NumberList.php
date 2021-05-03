@@ -18,13 +18,13 @@ class NumberList implements \IteratorAggregate
 
     public function getIterator()
     {
-        return new \ArrayIterator($this->flatten());
+        return new \ArrayIterator($this->list);
     }
 
     public function valid()
     {
         $arr = [];
-        foreach($this as $t){
+        foreach($this->flatten() as $t){
             if($t !== 0){
                 if(isset($arr[$t])){
                     return false;
