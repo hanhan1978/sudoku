@@ -22,6 +22,10 @@ class Number
      */
     private bool $original;
 
+    private int $x;
+
+    private int $y;
+
     /**
      * Number constructor.
      * @param int[]|null $candidates
@@ -71,6 +75,21 @@ class Number
         return $this->candidates;
     }
 
+    public function setCandidates(array $candidates): void
+    {
+        $this->candidates = $candidates;
+    }
+
+    public function setXY(int $x, int $y) :void
+    {
+        $this->x = $x;
+        $this->y = $y;
+    }
+
+    public function getXY() :array
+    {
+        return [$this->x, $this->y];
+    }
 }
 
 

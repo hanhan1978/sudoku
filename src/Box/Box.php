@@ -17,6 +17,7 @@ class Box
     }
 
     public function append(int $x, int $y, Number $number){
+        $number->setXY($x, $y);
         $this->grid[$y][$x] = $number;
     }
 
@@ -25,6 +26,11 @@ class Box
         var_dump($this->grid[$y][$x]);
     }
 
+    /**
+     * @param int $x
+     * @param int $y
+     * @return Number
+     */
     public function getNumber(int $x, int $y) :Number{
         return $this->grid[$y][$x];
     }
@@ -58,7 +64,7 @@ class Box
     public function getRow(int $y) :NumberList
     {
         $row = new NumberList();
-        foreach($this->grid[$y] as $r){
+        foreach($this->grid[$y] as $x => $r){
             $row->append($r);
         };
         return $row;

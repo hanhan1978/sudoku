@@ -121,6 +121,19 @@ class BoxTest extends \PHPUnit\Framework\TestCase
     {
         $expected = [0,0,6,0,0,4,3,0,0];
         $this->assertSame($expected, $this->box->getParcel(0, 0)->flatten());
+        $numberList = $this->box->getParcel(0, 0);
+        foreach($numberList as $i => $num){
+            if($i===0){
+                list($x, $y) = $num->getXY();
+                $this->assertSame(0, $x);
+                $this->assertSame(0, $y);
+            }
+            if($i===8){
+                list($x, $y) = $num->getXY();
+                $this->assertSame(2, $x);
+                $this->assertSame(2, $y);
+            }
+        }
     }
     /**
      * @test
