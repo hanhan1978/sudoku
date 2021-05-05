@@ -22,62 +22,80 @@ class Pair implements SolverInterface
          */
         while(list($x, $y, $number) = $newBox->next()){
             if($number->candidateCount() === 2){
-                $pairs[$y][$x] = $number->getCandidates();
+                $pairs[] = $number;
             }
         }
-        foreach($pairs as $y => $row){
-            foreach($row as $x => $pair){
-                //fix y
-                if($this->haveXPairFriends($x, $y, $pair, $pairs)){
-                    foreach($newBox->getRow($y) as $tx => $num){
-                        if($num->decided()) continue;
-                        $cands = array_diff($newBox->getNumber($tx, $y)->getCandidates(), $pair);
-                        $newBox->append($tx, $y, new Number($cands, count($cands) <$newBox->getNumber($tx, $y)->candidateCount()));
-                    }
+
+        foreach($pairs as $pair){
+            list($x, $y) = $pair->getXY();
+
+            //fix y
+            if($this->haveXPairFriends($pair, $pairs)){
+                foreach($newBox->getRow($y) as $tNum){
+                    if($tNum->decided()) continue;
+                    $cands = array_diff($tNum->getCandidates(), $pair->getCandidates());
+                    if(count($cands) === 0) continue;
+                    list($tx, $ty) = $tNum->getXY();
+                    $newBox->append($tx, $ty, new Number($cands, count($cands) <$tNum->candidateCount()));
                 }
-                //fix x
-                if($this->haveYPairFriends($x, $y, $pair, $pairs)){
-                    foreach($newBox->getColumn($x) as $ty => $num){
-                        if($num->decided()) continue;
-                        $cands = array_diff($newBox->getNumber($x, $ty)->getCandidates(), $pair);
-                        $newBox->append($tx, $y, new Number($cands, count($cands) <$newBox->getNumber($tx, $y)->candidateCount()));
-                    }
+            }
+            //fix x
+            if($this->haveYPairFriends($pair, $pairs)){
+                foreach($newBox->getColumn($x) as $tNum){
+                    if($tNum->decided()) continue;
+                    $cands = array_diff($tNum->getCandidates(), $pair->getCandidates());
+                    if(count($cands) === 0) continue;
+                    list($tx, $ty) = $tNum->getXY();
+                    $newBox->append($tx, $ty, new Number($cands, count($cands) <$tNum->candidateCount()));
                 }
             }
         }
         return $newBox;
     }
 
-    private function haveXPairFriends(int $tx, int $ty, $pair, $pairs)
+    /**
+     * @param Number $number
+     * @param Number[] $pairs
+     * @return bool
+     */
+    private function haveXPairFriends(Number $number, array $pairs)
     {
-        foreach($pairs as $y => $row){
-            if($y !== $ty) { continue;
+        list($x, $y) = $number->getXY();
+        foreach($pairs as $pair){
+            list($tx, $ty) = $pair->getXY();
+            if($y !== $ty) {
+                continue;
             }
-            foreach($row as $x => $v){
-                if($x === $tx) { continue;
-                }
-                if(count(array_diff($pair, $v)) === 0) {
-                    return true;
-                }
+            if($tx == $x) {
+                continue;
+            }
+            if(count(array_diff($pair->getCandidates(), $number->getCandidates())) === 0){
+                return true;
             }
         }
         return false;
     }
 
-    private function haveYPairFriends(int $tx, int $ty, $pair, $pairs)
+    /**
+     * @param Number $number
+     * @param Number[] $pairs
+     * @return bool
+     */
+    private function haveYPairFriends(Number $number, array $pairs)
     {
-        foreach($pairs as $y => $row){
-            foreach($row as $x => $v){
-                if($x !== $tx) { continue;
-                }
-                if($y === $ty) { continue;
-                }
-                if(count(array_diff($pair, $v)) === 0) {
-                    return true;
-                }
+        list($x, $y) = $number->getXY();
+        foreach($pairs as $pair){
+            list($tx, $ty) = $pair->getXY();
+            if($x !== $tx) {
+                continue;
+            }
+            if($y === $ty) {
+                continue;
+            }
+            if(count(array_diff($pair->getCandidates(), $number->getCandidates())) === 0) {
+                return true;
             }
         }
         return false;
-
     }
 }
