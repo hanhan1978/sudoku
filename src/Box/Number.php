@@ -3,8 +3,13 @@ declare(strict_types=1);
 
 namespace Hanhan1978\Sudoku\Box;
 
-use JetBrains\PhpStorm\Pure;
-
+/**
+ * 数字を表すクラス
+ * 候補を表す $candidates が1つだけになったら、数字が決定しているとみなす
+ *
+ * Class Number
+ * @package Hanhan1978\Sudoku\Box
+ */
 class Number
 {
     /**
@@ -80,6 +85,12 @@ class Number
         $this->candidates = $candidates;
     }
 
+    /**
+     * 数字に、後付でXYをもたせるために作った関数。クラスの設計し直しで消したい。
+     *
+     * @param int $x
+     * @param int $y
+     */
     public function setXY(int $x, int $y) :void
     {
         $this->x = $x;

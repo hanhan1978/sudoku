@@ -3,6 +3,15 @@ declare(strict_types=1);
 
 namespace Hanhan1978\Sudoku\Box;
 
+/**
+ * 数独全体の箱を表す
+ * 数字は $grid に二次元配列で保持する
+ *
+ *
+ *
+ * Class Box
+ * @package Hanhan1978\Sudoku\Box
+ */
 class Box
 {
     /**

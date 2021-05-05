@@ -3,7 +3,12 @@ declare(strict_types=1);
 
 namespace Hanhan1978\Sudoku\Box;
 
-
+/**
+ * 9個の数字の集まりを表すリストクラス
+ *
+ * Class NumberList
+ * @package Hanhan1978\Sudoku\Box
+ */
 class NumberList implements \IteratorAggregate
 {
     /**
@@ -21,6 +26,10 @@ class NumberList implements \IteratorAggregate
         return new \ArrayIterator($this->list);
     }
 
+    /**
+     * 9個の数字の集まりに矛盾がないかを判断する
+     * @return bool
+     */
     public function valid()
     {
         $arr = [];

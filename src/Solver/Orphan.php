@@ -6,6 +6,13 @@ use Hanhan1978\Sudoku\Box\Box;
 use Hanhan1978\Sudoku\Box\Number;
 use Hanhan1978\Sudoku\Box\NumberList;
 
+/**
+ * 縦軸、横軸、９マス正方形内で、あるひとつの数字がそのマス以外には入らないことを見つける。
+ * Uniqueに似ているが、Uniqueは候補を絞り込むのに対して、Orphan は候補が複数あるなかで、そのマスのみにしか存在しえない数字を見つける。
+ *
+ * Class Orphan
+ * @package Hanhan1978\Sudoku\Solver
+ */
 class Orphan implements SolverInterface
 {
 

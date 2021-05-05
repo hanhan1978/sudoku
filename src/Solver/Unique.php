@@ -10,7 +10,7 @@ use Hanhan1978\Sudoku\Box\Number;
 /**
  * Class Unique
  *
- * Find an unique digit by checking a row, column, parcel
+ * もっとも単純な解法。横軸、縦軸、自分がいる９マス正方形内で候補の消し込みを行う
  *
  * @package Hanhan1978\Sudoku\Solver
  */

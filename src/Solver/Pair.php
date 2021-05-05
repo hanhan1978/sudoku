@@ -7,6 +7,13 @@ namespace Hanhan1978\Sudoku\Solver;
 use Hanhan1978\Sudoku\Box\Box;
 use Hanhan1978\Sudoku\Box\Number;
 
+/**
+ * 縦軸、横軸、９マス正方形において、a, b の２つの数字のみを候補とするセルが２つ存在する場合、それ以外のマスから
+ * a,b を候補から消せる
+ *
+ * Class Pair
+ * @package Hanhan1978\Sudoku\Solver
+ */
 class Pair implements SolverInterface
 {
 
