@@ -143,4 +143,17 @@ class Box
         $this->y = 0;
         return true;
     }
+
+    function __clone() {
+        /**
+         * @var int $x
+         * @var int $y
+         * @var Number $number
+         */
+        while(list($x, $y, $number) = $this->next()) {
+            $clone = new Number($number->getCandidates(), $number->updated(), $number->isOriginal());
+            $clone->setXY($x, $y);
+            $this->grid[$y][$x] = $clone;
+        }
+    }
 }

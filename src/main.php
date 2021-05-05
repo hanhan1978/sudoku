@@ -18,42 +18,72 @@ require_once dirname(__FILE__)."/../vendor/autoload.php";
 */
 
 $problem = <<<EOL
-007860200
-081030000
-000007000
-000980600
-960000080
-003000000
-000008904
-000170000
-610400030
+000000000
+050900320
+000000006
+800070461
+300060007
+900080000
+003001004
+060200730
+000000000
 EOL;
 
 $box = \Hanhan1978\Sudoku\Box\ProblemParser::parse($problem);
 
-$history = [];
+//解けるところまでは理詰めで解く
+$unique = new \Hanhan1978\Sudoku\Solver\Unique();
+$orphan = new \Hanhan1978\Sudoku\Solver\Orphan();
+$pair = new \Hanhan1978\Sudoku\Solver\Pair();
 
-$counter = 0;
-while(true){
-
+for($i=0; $i<20; $i++){
     if($box->solved()) break;
-
-    $history[] = $box;
-
-    $unique = new \Hanhan1978\Sudoku\Solver\Unique();
-    $orphan = new \Hanhan1978\Sudoku\Solver\Orphan();
-    $pair = new \Hanhan1978\Sudoku\Solver\Pair();
     $box = $unique->solve($box);
     $box = $pair->solve($box);
     $box = $orphan->solve($box);
-
-    if(++$counter > 15) break;
 }
 
-if($box->solved()){
-    echo "\n---------SOLVED-------[Counter [{$counter}]---\n";
+if(!$box->solved()){
+    //仮置
+    $guess = new \Hanhan1978\Sudoku\Solver\Guess();
+    $box = $guess->solve($box);
+}
+
+if($box->valid() && $box->solved()){
+    echo "\n------SOLVED------\n";
 }else{
-    echo "\n---------FAILED----------\n";
+    echo "\n------FAILED------\n";
 }
 
 $box->display();
+
+class Kari{
+
+    public function getKari(\Hanhan1978\Sudoku\Box\Box $box){
+
+        /**
+         * @var int $x
+         * @var int $y
+         * @var \Hanhan1978\Sudoku\Box\Number $number
+         */
+        while(list($x, $y, $number) = $box->next()) {
+            if($number->decided() || $number->candidateCount() > 2) continue;
+
+            if(empty($number->getCandidates())){
+                return null;
+            }
+            $guessDigit = $number->getCandidates()[array_rand($number->getCandidates())];
+            echo "kari for cand count => ".$number->candidateCount()."\n";
+            return [$x, $y, $guessDigit];
+        }
+        return null;
+    }
+}
+
+
+class History{
+
+    public function __construct(private int $x, private int $y, private int $digit)
+    {
+    }
+}

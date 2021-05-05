@@ -235,4 +235,14 @@ class BoxTest extends \PHPUnit\Framework\TestCase
         $this->assertSame(0, $y);
         $this->assertSame(0, $number->digit());
     }
+
+    /**
+     * @test
+     */
+    public function clone_obj()
+    {
+        $box2 = clone $this->box;
+        $this->box->getNumber(2, 0)->setCandidates([1]);
+        $this->assertNotSame($this->box->getNumber(2, 0)->digit(), $box2->getNumber(2, 0)->digit());
+    }
 }
