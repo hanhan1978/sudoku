@@ -28,6 +28,8 @@ class Guess implements SolverInterface
     }
 
 
+
+
     public function solve(Box $box): Box
     {
         //どんどん破壊的変更で更新するのでcloneしとく
@@ -55,10 +57,10 @@ class Guess implements SolverInterface
             if(!$tempBox->valid()){
                 //矛盾がでたらやめる
                 continue;
-            }else{
-                //矛盾がなければ仮置きを縦に続行する
-                $tempBox = $this->solve($tempBox);
             }
+
+            //矛盾がなければ仮置きを縦に続行する
+            $tempBox = $this->solve($tempBox);
             if($tempBox->solved()){
                 return $tempBox;
             }
