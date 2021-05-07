@@ -35,10 +35,8 @@ class PairTest extends \PHPUnit\Framework\TestCase
         $box = \Hanhan1978\Sudoku\Box\ProblemParser::parse($problem);
         $box = (new \Hanhan1978\Sudoku\Solver\Unique())->solve($box);
         $box = $this->solver->solve($box);
-        $box->display();
-        echo "\n--------\n";
         $box = (new \Hanhan1978\Sudoku\Solver\Unique())->solve($box);
-        $box->display();
+        $this->assertSame(8, $box->getNumber(1,1)->digit());
     }
 
 }
