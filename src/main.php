@@ -15,39 +15,35 @@ require_once dirname(__FILE__)."/../vendor/autoload.php";
 000000000 000100409 807026951 060732080 000010047 009500000
 000000000 005274030 100897060 910000206 000050000 005340000
 
+Most Difficult
+800000000
+003600000
+070090200
+050007000
+000045700
+000100030
+001000068
+008500010
+090000400
 */
 
 $problem = <<<EOL
-000000000
-050900320
-000000006
-800070461
-300060007
-900080000
-003001004
-060200730
-000000000
+800000000
+003600000
+070090200
+050007000
+000045700
+000100030
+001000068
+008500010
+090000400
 EOL;
 
 $box = \Hanhan1978\Sudoku\Box\ProblemParser::parse($problem);
 
-//解けるところまでは理詰めで解く
-$unique = new \Hanhan1978\Sudoku\Solver\Unique();
-$orphan = new \Hanhan1978\Sudoku\Solver\Orphan();
-$pair = new \Hanhan1978\Sudoku\Solver\Pair();
-
-for($i=0; $i<20; $i++){
-    if($box->solved()) break;
-    $box = $unique->solve($box);
-    $box = $pair->solve($box);
-    $box = $orphan->solve($box);
-}
-
-if(!$box->solved()){
-    //仮置
-    $guess = new \Hanhan1978\Sudoku\Solver\Guess();
-    $box = $guess->solve($box);
-}
+//仮置
+$guess = new \Hanhan1978\Sudoku\Solver\Guess();
+$box = $guess->solve($box);
 
 if($box->valid() && $box->solved()){
     echo "\n------SOLVED------\n";
@@ -56,34 +52,3 @@ if($box->valid() && $box->solved()){
 }
 
 $box->display();
-
-class Kari{
-
-    public function getKari(\Hanhan1978\Sudoku\Box\Box $box){
-
-        /**
-         * @var int $x
-         * @var int $y
-         * @var \Hanhan1978\Sudoku\Box\Number $number
-         */
-        while(list($x, $y, $number) = $box->next()) {
-            if($number->decided() || $number->candidateCount() > 2) continue;
-
-            if(empty($number->getCandidates())){
-                return null;
-            }
-            $guessDigit = $number->getCandidates()[array_rand($number->getCandidates())];
-            echo "kari for cand count => ".$number->candidateCount()."\n";
-            return [$x, $y, $guessDigit];
-        }
-        return null;
-    }
-}
-
-
-class History{
-
-    public function __construct(private int $x, private int $y, private int $digit)
-    {
-    }
-}
