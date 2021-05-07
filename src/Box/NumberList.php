@@ -16,9 +16,15 @@ class NumberList implements \IteratorAggregate
      */
     private array $list;
 
+    /**
+     * @var int[]
+     */
+    private array $flattend;
+
     public function append(Number $number)
     {
         $this->list[] = $number;
+        $this->flattend[] = $number->digit();
     }
 
     public function getIterator()
@@ -46,6 +52,6 @@ class NumberList implements \IteratorAggregate
 
     public function flatten() :array
     {
-        return array_map(fn($n) => $n->digit(), $this->list);
+        return $this->flattend;
     }
 }

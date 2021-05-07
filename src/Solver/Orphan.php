@@ -61,27 +61,14 @@ class Orphan implements SolverInterface
         $count = [];
         foreach($list as $number){
             foreach($number->getCandidates() as $n){
-                if(isset($count[$n])){
-                    $count[$n]++;
-                }else{
-                    $count[$n]=1;
-                }
+                $count[$n][] = $number;
             }
         }
-        $on = [];
+        $orphans = [];
         foreach($count as $k=>$v){
-            if($v === 1){
-                $on[] = $k;
-            }
-        }
-
-        $orphans=[];
-        foreach($list as $number){
-            foreach($on as $o){
-                if($key = array_search($o, $number->getCandidates())){
-                    $number->setCandidates([$o]);
-                    $orphans[] = $number;
-                }
+            if(count($v) === 1){
+                $v[0]->setCandidates([$k]);
+                $orphans[] = $v[0];
             }
         }
         return $orphans;

@@ -31,6 +31,8 @@ class Number
 
     private int $y;
 
+    private int $digit = 0;
+
     /**
      * Number constructor.
      * @param int[]|null $candidates
@@ -41,6 +43,7 @@ class Number
             $this->candidates = [1,2,3,4,5,6,7,8,9];
         }else{
             $this->candidates = $candidates;
+            if(count($candidates) === 1) $this->digit = current($candidates);
         }
         $this->updated = $updated;
         $this->original = $original;
@@ -64,7 +67,7 @@ class Number
 
     public function digit() :int
     {
-        return $this->decided() ? array_slice($this->candidates, 0, 1)[0] : 0;
+        return $this->digit;
     }
 
     public function candidateCount() :int
@@ -82,6 +85,7 @@ class Number
 
     public function setCandidates(array $candidates): void
     {
+        if(count($candidates) === 1) $this->digit = current($candidates);
         $this->candidates = $candidates;
     }
 
