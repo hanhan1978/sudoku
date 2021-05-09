@@ -18,38 +18,37 @@ class Orphan implements SolverInterface
 
     public function solve(Box $box): Box
     {
-        $newBox = clone $box;
         /**
          * @var int $x
          * @var int $y
          * @var Number $number
          */
-        while(list($x, $y, $number) = $newBox->next()){
+        while(list($x, $y, $number) = $box->next()){
             if($number->decided()){
-                $newBox->append($x, $y, new Number([$number->digit()], $number->updated() , $number->isOriginal()));
+                $box->append($x, $y, new Number([$number->digit()], $number->updated() , $number->isOriginal()));
                 continue;
             }
 
             //findColumn
-            foreach($this->findOrphan($newBox->getColumn($x)) as $number){
+            foreach($this->findOrphan($box->getColumn($x)) as $number){
                 list($ox, $oy) = $number->getXY();
-                $newBox->append($ox, $oy, new Number($number->getCandidates(), true));
+                $box->append($ox, $oy, new Number($number->getCandidates(), true));
             }
 
             //findRow
-            foreach($this->findOrphan($newBox->getRow($y)) as $number){
+            foreach($this->findOrphan($box->getRow($y)) as $number){
                 list($ox, $oy) = $number->getXY();
-                $newBox->append($ox, $oy, new Number($number->getCandidates(), true));
+                $box->append($ox, $oy, new Number($number->getCandidates(), true));
             }
 
             //findParcel
-            foreach($this->findOrphan($newBox->getParcel($x, $y)) as $number){
+            foreach($this->findOrphan($box->getParcel($x, $y)) as $number){
                 list($ox, $oy) = $number->getXY();
-                $newBox->append($ox, $oy, new Number($number->getCandidates(), true));
+                $box->append($ox, $oy, new Number($number->getCandidates(), true));
             }
 
         }
-        return $newBox;
+        return $box;
     }
 
     /**

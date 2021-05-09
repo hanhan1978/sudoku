@@ -19,15 +19,13 @@ class Pair implements SolverInterface
 
     public function solve(Box $box): Box
     {
-        $newBox = clone $box;
-
         $pairs = [];
         /**
          * @var int $x
          * @var int $y
          * @var Number $number
          */
-        while(list($x, $y, $number) = $newBox->next()){
+        while(list($x, $y, $number) = $box->next()){
             if($number->candidateCount() === 2){
                 $pairs[] = $number;
             }
@@ -38,26 +36,26 @@ class Pair implements SolverInterface
 
             //fix y
             if($this->haveXPairFriends($pair, $pairs)){
-                foreach($newBox->getRow($y) as $tNum){
+                foreach($box->getRow($y) as $tNum){
                     if($tNum->decided()) continue;
                     $cands = array_diff($tNum->getCandidates(), $pair->getCandidates());
                     if(count($cands) === 0) continue;
                     list($tx, $ty) = $tNum->getXY();
-                    $newBox->append($tx, $ty, new Number($cands, count($cands) <$tNum->candidateCount()));
+                    $box->append($tx, $ty, new Number($cands, count($cands) <$tNum->candidateCount()));
                 }
             }
             //fix x
             if($this->haveYPairFriends($pair, $pairs)){
-                foreach($newBox->getColumn($x) as $tNum){
+                foreach($box->getColumn($x) as $tNum){
                     if($tNum->decided()) continue;
                     $cands = array_diff($tNum->getCandidates(), $pair->getCandidates());
                     if(count($cands) === 0) continue;
                     list($tx, $ty) = $tNum->getXY();
-                    $newBox->append($tx, $ty, new Number($cands, count($cands) <$tNum->candidateCount()));
+                    $box->append($tx, $ty, new Number($cands, count($cands) <$tNum->candidateCount()));
                 }
             }
         }
-        return $newBox;
+        return $box;
     }
 
     /**
