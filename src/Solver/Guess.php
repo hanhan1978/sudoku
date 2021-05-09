@@ -22,13 +22,12 @@ class Guess implements SolverInterface
 
     public function __construct()
     {
+        global $counter;
+        $counter = 0;
         $this->solvers[] = new Unique();
         $this->solvers[] = new Pair();
         $this->solvers[] = new Orphan();
     }
-
-
-
 
     public function solve(Box $box): Box
     {
@@ -59,13 +58,14 @@ class Guess implements SolverInterface
                 continue;
             }
 
-            //矛盾がなければ仮置きを縦に続行する
+            //矛盾がなければ仮置きを縦に続行する(成功する経路は縦に深くなっていく）
             $tempBox = $this->solve($tempBox);
             if($tempBox->solved()){
                 return $tempBox;
             }
         }
-        return $newBox;
+        //矛盾が出続けた場合は、一個前の状態のboxを返す(この経路の探索は失敗したことを表す）
+        return $box;
     }
 
 }
